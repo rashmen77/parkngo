@@ -1,52 +1,29 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import "../css/signup.css";
 
 class UnconnectedSignup extends Component {
-  constructor() {
-    super();
-    this.state = {
-      usernameInput: "",
-      passwordInput: ""
-    };
-  }
-  usernameChange = evt => {
-    this.setState({ usernameInput: evt.target.value });
-  };
-  passwordChange = evt => {
-    this.setState({ passwordInput: evt.target.value });
-  };
-  submitHandler = async evt => {
-    evt.preventDefault();
-    console.log("username", this.state.username);
-    console.log("password", this.state.passwordInput);
-    let name = this.state.usernameInput;
-    let data = new FormData();
-    data.append("username", name);
-    data.append("password", this.state.passwordInput);
-    let response = await fetch("/signup", { method: "POST", body: data });
-    let body = await response.text();
-    console.log("/login response", body);
-    body = JSON.parse(body);
-    if (body.success) {
-      this.props.dispatch({
-        type: "login-success"
-      });
-    } else {
-      this.props.dispatch({
-        type: "login-fail"
-      });
-      alert("Signup Failure");
-    }
-  };
   render() {
     return (
-      <div>
-        <h2>Signup</h2>
-        <form onSubmit={this.submitHandler}>
-          Username <input type="text" onChange={this.usernameChange} />
-          Password <input type="text" onChange={this.passwordChange} />
-          <input type="submit" value="signup" />
-        </form>
+      <div className="signup-Container">
+        <div className="signup-text">Create an account to continue</div>
+        <div className="signup-box">
+          <button className="signup_btn">
+            {/* <span className="icon"></span> */}
+            <span>Continue with Google</span>
+          </button>
+          <Link to="/login">
+            <button className="signup_btn">
+              Sign in with my email address
+            </button>
+          </Link>
+          <Link to="/register">
+            <button className="signup_btn">
+              Create account with my email address
+            </button>
+          </Link>
+        </div>
       </div>
     );
   }

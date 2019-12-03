@@ -1,0 +1,49 @@
+.register-container {
+  font-family: "Lato", sans-serif;
+  font-size: 20px;
+  grid-column: 2 / span 6;
+  background-color: var(--formColor);
+  margin-top: 10%;
+  margin-left: 20%;
+  width: 680px;
+  border-radius: 5px;
+  height: 450px;
+  color: var(--fontlight);
+}
+.register-box {
+  margin-top: 40px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.signup-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.register-title {
+  margin-bottom: 50px;
+}
+.signup-field-input {
+  margin-left: auto;
+}
+
+.signup-field-input input {
+  width: 360px;
+  height: 25px;
+  border-radius: 5px;
+}
+
+.register-btn {
+  margin-top: 30px;
+  float: right;
+  width: 180px;
+  font-size: 17px;
+  background-color: var(--button);
+  color: var(--fontlight);
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

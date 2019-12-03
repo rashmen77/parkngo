@@ -1,12 +1,9 @@
 import { createStore } from "redux";
 let reducer = (state, action) => {
   if (action.type === "login-success") {
-    return { ...state, loggedIn: true };
+    return { ...state, loggedIn: true, user: action.value };
   }
 
-  if (action.type === "login-succes") {
-    return { ...state, loggedIn: true };
-  }
   if (action.type === "login-fail") {
     return { ...state, loggedIn: false };
   }
@@ -15,7 +12,7 @@ let reducer = (state, action) => {
 };
 const store = createStore(
   reducer,
-  { loggedIn: false },
+  { loggedIn: false, user: undefined },
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 export default store;

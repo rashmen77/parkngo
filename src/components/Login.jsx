@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import "../css/login.css";
 
 class UnconnectedLogin extends Component {
   constructor() {
@@ -40,13 +42,27 @@ class UnconnectedLogin extends Component {
   };
   render() {
     return (
-      <div>
-        <h2>Login</h2>
-        <form onSubmit={this.submitHandler}>
-          Username <input type="text" onChange={this.usernameChange} />
-          Password <input type="text" onChange={this.passwordChange} />
-          <input type="submit" value="login" />
-        </form>
+      <div className="login-Container">
+        <div className="login-text">Welcome back! Let’s get you signed in.</div>
+        <div className="login-box">
+          <h2>Login</h2>
+          <form onSubmit={this.submitHandler}>
+            <div className="textBox">
+              <div>Username </div>
+              <input type="text" onChange={this.usernameChange} />
+            </div>
+            <div className="textBox">
+              <div>Password </div>
+              <input type="text" onChange={this.passwordChange} />
+            </div>
+            <Link className="login-forgotPwd" to="/forgotPwd">
+              I've forgotten my password
+            </Link>
+            <button className="login_btn" type="submit" value="login">
+              Sign in
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
