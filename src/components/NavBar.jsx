@@ -25,30 +25,30 @@ class UnconnectedNavBar extends Component {
           <div className="nav-link">
             <Link to="/about">About</Link>
             <Link to="/rentDriveway">Rent out your driveway</Link>
-            {!this.props.lgin ? (
-              <>
-                <Link to="/login">Login</Link>
-                <Link to="/signup">
-                  <button className="button_med">Signup</button>
-                </Link>
-              </>
-            ) : (
-              <div className="dropdown">
-                <button className="dropbtn">
-                  <img
-                    style={{ cursor: "pointer" }}
-                    height="40px"
-                    src="../assets/NoUserProfileImage.png"
-                  />
-                </button>
-                <div className="dropdown-content">
-                  <a>Profile</a>
-                  <a>Posts</a>
-                  <a onClick={this.userLogout}>Logout</a>
-                </div>
-              </div>
-            )}
           </div>
+          {!this.props.lgin ? (
+            <div className="nav-login-signup">
+              <Link to="/login">Login</Link>
+              <Link to="/signup">
+                <button className="button_med">Signup</button>
+              </Link>
+            </div>
+          ) : (
+            <div className="dropdown">
+              <button className="dropbtn">
+                <img
+                  style={{ cursor: "pointer" }}
+                  height="54px"
+                  src="../assets/NoUserProfileImage.png"
+                />
+              </button>
+              <div className="dropdown-content">
+                <a>Profile</a>
+                <a>Posts</a>
+                <a onClick={this.userLogout}>Logout</a>
+              </div>
+            </div>
+          )}
         </nav>
       </header>
     );

@@ -11,11 +11,12 @@
   height: 450px;
   color: var(--fontlight);
 }
+
 .icon {
-  display: inline-block;
+  float: left;
   vertical-align: middle;
-  width: 42px;
-  height: 42px;
+  width: 20px;
+  height: 20px;
 }
 .signup-box {
   width: 350px;

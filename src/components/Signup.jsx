@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { FaGoogle } from "react-icons/fa";
 import "../css/signup.css";
 
 class UnconnectedSignup extends Component {
@@ -10,8 +11,8 @@ class UnconnectedSignup extends Component {
         <div className="signup-text">Create an account to continue</div>
         <div className="signup-box">
           <button className="signup_btn">
-            {/* <span className="icon"></span> */}
-            <span>Continue with Google</span>
+            <FaGoogle className="icon" />
+            <span className="googleSpan">Continue with Google</span>
           </button>
           <Link to="/login">
             <button className="signup_btn">

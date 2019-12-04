@@ -123,6 +123,7 @@ app.post("/signup", upload.none(), (req, res) => {
   let _lastName = req.body.lastName;
   let _name = req.body.username;
   let _pwd = req.body.password;
+  //TODO: validation
   dbo.collection("users").findOne({ username: _name }, (err, user) => {
     if (err) {
       console.log("/login error", err);
