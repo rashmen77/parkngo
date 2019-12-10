@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
 import "../css/register.css";
+import { FaGoogle } from "react-icons/fa";
 
 class UnconnectedRegister extends Component {
   constructor() {
@@ -12,6 +14,7 @@ class UnconnectedRegister extends Component {
       passwordInput: ""
     };
   }
+
   firstNameChange = evt => {
     this.setState({ firstName: evt.target.value });
   };
@@ -51,49 +54,62 @@ class UnconnectedRegister extends Component {
       alert("Signup Failure");
     }
   };
+  renderRedirect = () => {
+    if (this.props.lgin) {
+      return <Redirect to="/" />;
+    }
+  };
   render() {
     return (
-      <div className="register-container">
-        <div className="register-box">
-          <div className="register-title">
-            <h2>Create an account to continue</h2>
-          </div>
+      <>
+        {this.renderRedirect()}
 
-          <form onSubmit={this.submitHandler}>
-            <div className="signup-field">
-              <div className="signup-label">First name</div>
-              <div className="signup-field-input">
-                <input type="text" onChange={this.firstNameChange} />
-              </div>
+        <div className="register-container">
+          <div className="register-box">
+            <div className="register-title">
+              <h2>Create an account to continue</h2>
             </div>
-            <div className="signup-field">
-              <div className="signup-label">Last name</div>
-              <div className="signup-field-input">
-                <input type="text" onChange={this.lastNameChange} />
+
+            <form onSubmit={this.submitHandler}>
+              <div className="signup-field">
+                <div className="signup-label">First name</div>
+                <div className="signup-field-input">
+                  <input type="text" onChange={this.firstNameChange} />
+                </div>
               </div>
-            </div>
-            <div className="signup-field">
-              <div className="signup-label">Email address</div>
-              <div className="signup-field-input">
-                <input type="text" onChange={this.usernameChange} />
+              <div className="signup-field">
+                <div className="signup-label">Last name</div>
+                <div className="signup-field-input">
+                  <input type="text" onChange={this.lastNameChange} />
+                </div>
               </div>
-            </div>
-            <div className="signup-field">
-              <div className="signup-label">Password</div>
-              <div className="signup-field-input">
-                <input type="text" onChange={this.passwordChange} />
+              <div className="signup-field">
+                <div className="signup-label">Email address</div>
+                <div className="signup-field-input">
+                  <input type="text" onChange={this.usernameChange} />
+                </div>
               </div>
-            </div>
-            <button className="register-btn" type="submit" value="signup">
-              Create account
-            </button>
-          </form>
+              <div className="signup-field">
+                <div className="signup-label">Password</div>
+                <div className="signup-field-input">
+                  <input type="text" onChange={this.passwordChange} />
+                </div>
+              </div>
+              <button className="register-btn" type="submit" value="signup">
+                Create account
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }
 
-let Register = connect()(UnconnectedRegister);
+let mapStateToProps = state => {
+  return { lgin: state.loggedIn };
+};
+
+let Register = connect(mapStateToProps)(UnconnectedRegister);
 
 export default Register;

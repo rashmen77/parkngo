@@ -17,9 +17,13 @@ let profileImageUpload = multer({
 let dbo = undefined;
 let url =
   "mongodb+srv://bob:bobsue@cluster0-oit7u.mongodb.net/test?retryWrites=true&w=majority";
-MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
-  dbo = db.db("driveways");
-});
+MongoClient.connect(
+  url,
+  { useUnifiedTopology: true, useNewUrlParser: true },
+  (err, db) => {
+    dbo = db.db("driveways");
+  }
+);
 
 let generateId = () => {
   return "" + Math.floor(Math.random() * 100000000);
@@ -33,10 +37,8 @@ app.use("/", express.static("public")); // Needed for local assets
 // endpoints
 
 app.get("/logout", upload.none(), (req, res) => {
-  console.log("browser cookie", req.cookies.sid);
   let _sid = req.cookies.sid;
   dbo.collection("users").findOne({ sid: _sid }, (err, user) => {
-    console.log("browser cookie2", user.sid);
     if (err) {
       console.log("/login error", err);
       res.send(JSON.stringify({ success: false }));
@@ -48,7 +50,6 @@ app.get("/logout", upload.none(), (req, res) => {
       return;
     }
     if (user.sid === _sid) {
-      console.log("yo");
       dbo.collection("users").updateOne(
         { sid: _sid },
         {
@@ -65,10 +66,8 @@ app.get("/logout", upload.none(), (req, res) => {
 });
 
 app.get("/checkLogined", upload.none(), (req, res) => {
-  console.log("browser cookie", req.cookies.sid);
   let _sid = req.cookies.sid;
   dbo.collection("users").findOne({ sid: _sid }, (err, user) => {
-    console.log(user);
     if (err) {
       console.log("/login error", err);
       res.send(JSON.stringify({ success: false }));
@@ -150,6 +149,80 @@ app.post("/signup", upload.none(), (req, res) => {
       return;
     }
   });
+});
+
+app.post("/postDriveway", drivewayImages.single("file"), (req, res) => {
+  let _file = req.file;
+  let _filePath = "/uploads/images/drivewayImages/" + _file.filename;
+
+  let _address = req.body.address;
+  let _lat = req.body.lat;
+  let _lng = req.body.lng;
+  let _startDay = req.body.startDay;
+  let _startTime = req.body.startTime;
+  let _endDay = req.body.endDay;
+  let _endTime = req.body.endTime;
+  let _price = req.body.price;
+
+  let _user = undefined;
+
+  let _sid = req.cookies.sid;
+
+  dbo.collection("users").findOne({ sid: _sid }, (err, user) => {
+    if (err) {
+      console.log("/login error", err);
+      res.send(JSON.stringify({ success: false }));
+      return;
+    }
+    if (user === null || user.sid === "") {
+      res.send(JSON.stringify({ success: false }));
+      console.log("/login error 2");
+      return;
+    }
+    if (user.sid === _sid) {
+      console.log("/login error 3");
+      dbo.collection("posts").insertOne({
+        userId: user._id,
+        fileURL: _filePath,
+        address: _address,
+        lat: _lat,
+        lng: _lng,
+        startDay: _startDay,
+        startTime: _startTime,
+        endDay: _endDay,
+        endTime: _endTime,
+        price: _price
+      });
+
+      console.log("/login error 4");
+      res.send(JSON.stringify({ success: true }));
+      return;
+    }
+  });
+});
+
+app.get("/allPosts", upload.none(), (req, res) => {
+  dbo
+    .collection("posts")
+    .find({})
+    .toArray((err, posts) => {
+      console.log("POSTS", posts);
+      if (err) {
+        res.send(
+          JSON.stringify({
+            success: false,
+            message: "unable to fetch Art items"
+          })
+        );
+      }
+
+      res.send(
+        JSON.stringify({
+          success: true,
+          data: posts
+        })
+      );
+    });
 });
 
 app.all("/*", (req, res, next) => {

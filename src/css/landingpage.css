@@ -1,0 +1,120 @@
+.searchMap-container {
+  margin-top: 150px;
+  margin-left: 100px;
+  display: flex;
+}
+.searchResult {
+  font-size: 14px;
+  margin: 5px 0 5px 0;
+  border: none;
+  background-color: transparent;
+  font-family: "Lato", sans-serif;
+  color: var(--fontlight);
+}
+.searchParking {
+  display: block;
+  font-family: "Lato", sans-serif;
+  grid-column: 1 / span 6;
+  background-color: transparent;
+  margin-top: 50px;
+  width: 480px;
+  border-radius: 5px;
+  height: 100%;
+  color: var(--fontlight);
+}
+
+.searchTitle {
+  display: flex;
+  align-items: center;
+  background-color: var(--formColor);
+  border-radius: 5px;
+}
+
+.hourAndDaily {
+  margin: 20px auto 20px 40px;
+}
+
+.monthly {
+  margin: 20px 40px 20px auto;
+}
+
+.searchLocation {
+  margin: 10px 0 10px 0;
+  padding: 15px 0 15px 0;
+  background-color: var(--formColor);
+  border-radius: 5px;
+}
+
+.locationLabel {
+  font-size: 12px;
+  font-weight: lighter;
+}
+
+.locationContainer {
+  margin-left: 10px;
+}
+
+.inputLocation {
+  width: 420px;
+  padding: 10px 0 10px 0;
+  border-radius: 5px;
+}
+
+.mapIcon {
+  margin-left: 15px;
+  height: 20px;
+  width: 20px;
+}
+
+.dateTimeBox {
+  display: flex;
+  align-items: center;
+  margin: 10px 0 10px 0;
+  padding: 15px 0 15px 0;
+  background-color: var(--formColor);
+  border-radius: 5px;
+}
+
+.arrivalBtn {
+  border: none;
+  background-color: transparent;
+  font-size: 20px;
+  padding: 8px 25px;
+  transition: var(--tansition);
+}
+
+.leaving {
+  margin-left: auto;
+}
+
+.leavingBtn {
+  border: none;
+  background-color: transparent;
+  font-size: 20px;
+  padding: 8px 25px;
+  transition: var(--tansition);
+}
+
+.submitSearch {
+}
+
+.submitBtn {
+  border: none;
+  font-size: 20px;
+  background-color: var(--button);
+  width: 480px;
+  padding: 8px 25px;
+  transition: var(--tansition);
+}
+
+.submitBtn:hover {
+  background-color: var(--buttonHover);
+}
+.map_box {
+  margin-left: 10px;
+  color: black;
+}
+
+.map_box_map {
+  border-radius: 5px;
+}

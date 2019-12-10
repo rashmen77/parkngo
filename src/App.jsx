@@ -5,6 +5,9 @@ import Login from "./components/Login.jsx";
 import { connect } from "react-redux";
 import Navbar from "./components/NavBar.jsx";
 import Register from "./components/Register.jsx";
+import LandingPage from "./components/LandingPage.jsx";
+import SearchResultsMap from "./components/SearchResultsMap.jsx";
+import RentDriveway from "./components/RentDriveway.jsx";
 
 class UnconnectedApp extends Component {
   checkStatus = async () => {
@@ -29,27 +32,24 @@ class UnconnectedApp extends Component {
     this.checkStatus();
   };
 
-  login = () => {
-    return <Login></Login>;
-  };
-  signup = () => {
-    return <Signup></Signup>;
-  };
-  register = () => {
-    return <Register></Register>;
-  };
-
   render = () => {
     return (
       <BrowserRouter>
         <main>
           <Navbar></Navbar>
-          <Route exact={true} path="/login" component={this.login}></Route>
-          <Route exact={true} path="/signup" component={this.signup}></Route>
+          <Route exact={true} path="/" component={LandingPage}></Route>
+          <Route exact={true} path="/login" component={Login}></Route>
+          <Route exact={true} path="/signup" component={Signup}></Route>
+          <Route exact={true} path="/register" component={Register}></Route>
           <Route
             exact={true}
-            path="/register"
-            component={this.register}
+            path="/searchResults"
+            component={SearchResultsMap}
+          ></Route>
+          <Route
+            exact={true}
+            path="/rentDriveway"
+            component={RentDriveway}
           ></Route>
         </main>
       </BrowserRouter>

@@ -1,31 +1,39 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import "../css/signup.css";
 
 class UnconnectedSignup extends Component {
+  renderRedirect = () => {
+    if (this.props.lgin) {
+      return <Redirect to="/" />;
+    }
+  };
   render() {
     return (
-      <div className="signup-Container">
-        <div className="signup-text">Create an account to continue</div>
-        <div className="signup-box">
-          <button className="signup_btn">
-            <FaGoogle className="icon" />
-            <span className="googleSpan">Continue with Google</span>
-          </button>
-          <Link to="/login">
+      <>
+        {this.renderRedirect()}
+        <div className="signup-Container">
+          <div className="signup-text">Create an account to continue</div>
+          <div className="signup-box">
             <button className="signup_btn">
-              Sign in with my email address
+              <FaGoogle className="icon" />
+              <span className="googleSpan">Continue with Google</span>
             </button>
-          </Link>
-          <Link to="/register">
-            <button className="signup_btn">
-              Create account with my email address
-            </button>
-          </Link>
+            <Link to="/login">
+              <button className="signup_btn">
+                Sign in with my email address
+              </button>
+            </Link>
+            <Link to="/register">
+              <button className="signup_btn">
+                Create account with my email address
+              </button>
+            </Link>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }

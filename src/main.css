@@ -7,6 +7,9 @@
   --buttonHover: #a0c0c6;
   --formColor: rgba(76, 87, 96, 0.8);
 }
+button:focus {
+  outline: 0;
+}
 
 * {
   box-sizing: border-box;

@@ -1,0 +1,28 @@
+.arrivalContainer {
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  background-color: rgba(69, 122, 132, 0.1);
+  width: 450px;
+  height: 300px;
+  border-radius: 5px;
+}
+
+.calendar {
+  background-color: var(--formColor);
+  color: var(--fontlight);
+  border: none;
+  margin-left: 20px;
+  border-radius: 5px;
+}
+
+.react-calendar__tile react-calendar__month-view__days__day:hover {
+  background-color: var(--buttonHover);
+}
+
+.arrival-time-select {
+  margin-left: 20px;
+  background-color: var(--formColor);
+  color: var(--fontlight);
+  border: none;
+}
