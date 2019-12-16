@@ -29,8 +29,6 @@ class UnconnectedRegister extends Component {
   };
   submitHandler = async evt => {
     evt.preventDefault();
-    console.log("username", this.state.username);
-    console.log("password", this.state.passwordInput);
     let name = this.state.usernameInput;
     let firstName = this.state.firstName;
     let lastName = this.state.lastName;
@@ -45,7 +43,8 @@ class UnconnectedRegister extends Component {
     body = JSON.parse(body);
     if (body.success) {
       this.props.dispatch({
-        type: "login-success"
+        type: "login-success",
+        value: body.data
       });
     } else {
       this.props.dispatch({
@@ -92,7 +91,7 @@ class UnconnectedRegister extends Component {
               <div className="signup-field">
                 <div className="signup-label">Password</div>
                 <div className="signup-field-input">
-                  <input type="text" onChange={this.passwordChange} />
+                  <input type="password" onChange={this.passwordChange} />
                 </div>
               </div>
               <button className="register-btn" type="submit" value="signup">

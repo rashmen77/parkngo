@@ -1,0 +1,78 @@
+.parkingDetails-container {
+  grid-column: 2 / span 6;
+  display: block;
+  margin-top: 5%;
+  background-color: var(--formColor);
+  font-family: "Lato", sans-serif;
+  color: var(--fontlight);
+  height: 100%;
+  border-radius: 5px;
+}
+
+.parkingDetails-row {
+  display: flex;
+  margin-left: 15px;
+
+  margin-top: 20px;
+}
+
+.parkingDetails-hours {
+  display: block;
+}
+
+.parkingDetails-row img {
+  height: 400px;
+  width: 600px;
+  border-radius: 5px;
+}
+
+.parkingDetails-description {
+  margin-left: 15px;
+  margin-top: 10px;
+}
+
+.parkingDetails-price-container {
+  margin-bottom: 20px;
+}
+
+.parkingDetails-right-child {
+  margin-left: 15px;
+  width: auto;
+}
+
+.parkingDetails-price {
+  margin-bottom: 5px;
+}
+
+.parkingDetails-address {
+  margin-bottom: 20px;
+}
+.parkingDetails-qty-container {
+  margin-bottom: 20px;
+}
+
+.parkingDetails-dailyPrice {
+  margin-bottom: 5px;
+}
+
+.parkingDetails-Monthly {
+  margin-bottom: 10px;
+}
+
+.parkingDetails-row-bottom {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 15px 15px 0;
+}
+
+.checkOut_btn {
+  width: 500px;
+  font-size: 17px;
+  background-color: var(--button);
+  color: var(--fontlight);
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

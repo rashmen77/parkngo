@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Calendar from "react-calendar";
+import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
 import moment from "moment";
 import "rc-time-picker/assets/index.css";
@@ -22,7 +22,7 @@ class UnconnectedArrivalDateTime extends Component {
     });
   };
 
-  onChangetime = evt => {
+  setStartDate = evt => {
     this.props.dispatch({
       type: "arrivalTime-change",
       value: evt.target.value
@@ -34,10 +34,20 @@ class UnconnectedArrivalDateTime extends Component {
       <div className="arrivalContainer">
         <div className="arrival-calendar">
           <div className="dateSelect">
-            <Calendar
+            {/* <Calendar
               className="calendar"
               onChange={this.onChangeDate}
               value={this.props.date}
+            /> */}
+            <DatePicker
+              className="arrival"
+              selected={this.state.date}
+              onChange={date => setStartDate(date)}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={30}
+              timeCaption="time"
+              dateFormat="MMMM d, yyyy h:mm aa"
             />
           </div>
         </div>

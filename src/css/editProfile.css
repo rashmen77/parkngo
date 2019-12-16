@@ -1,0 +1,87 @@
+.editProfile-container {
+  font-family: "Lato", sans-serif;
+  font-size: 20px;
+  grid-column: 2 / span 6;
+  background-color: var(--formColor);
+  margin-top: 10%;
+  margin-left: 20%;
+  width: 680px;
+  border-radius: 5px;
+  height: auto;
+  color: var(--fontlight);
+  padding-bottom: 30px;
+}
+.editProfile-box {
+  margin-top: 40px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.editProfile-title {
+  margin-bottom: 50px;
+  color: var(--titleTextColor);
+}
+
+.editProfile-mediaContainer {
+  margin: auto;
+  margin-bottom: 30px;
+  width: 50%;
+  border-bottom-color: var(--fontlight);
+  border-bottom-style: solid;
+  border-bottom-width: medium;
+}
+
+.editProfile-sectionLabel {
+  margin-top: 25px;
+  margin-left: 0;
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: lighter;
+}
+
+.editProfile-mediaUpload {
+  border: none;
+  padding: 10px;
+}
+
+.editProfile-preview {
+  margin: auto;
+  width: 50%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  object-fit: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.editProfile-loadPreview {
+  width: 300px;
+}
+
+.editProfile-defaultdPreview {
+  width: 150px;
+}
+
+.editProfile-btn {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  float: right;
+  width: 180px;
+  font-size: 17px;
+  background-color: #93a8ac;
+  color: var(--fontlight);
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* .signup-field {
+  background-color: var(--button);
+  border-radius: 5px;
+  padding: 10px 5px 10px 5px;
+} */

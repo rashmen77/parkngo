@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { FaSatellite } from "react-icons/fa";
 
 class UnconnectedNavBar extends Component {
   userLogout = async () => {
@@ -19,12 +20,14 @@ class UnconnectedNavBar extends Component {
       <header>
         <nav>
           <Link to="/">
-            <img className="nav-logo" src="../assets/Driveways.png" />
+            <img className="nav-logo" src="../assets/logo.svg" />
           </Link>
 
           <div className="nav-link">
             <Link to="/about">About</Link>
-            <Link to="/rentDriveway">Rent out your driveway</Link>
+            <Link className="nav-listProperty-link" to="/listProperty">
+              List your property
+            </Link>
           </div>
           {!this.props.lgin ? (
             <div className="nav-login-signup">
@@ -36,15 +39,28 @@ class UnconnectedNavBar extends Component {
           ) : (
             <div className="dropdown">
               <button className="dropbtn">
-                <img
-                  style={{ cursor: "pointer" }}
-                  height="54px"
-                  src="../assets/NoUserProfileImage.png"
-                />
+                {console.log("nav user ", this.props.currentUser)}
+                {this.props.currentUser.file === "" ? (
+                  <img
+                    className="navbar-profile-img"
+                    style={{ cursor: "pointer" }}
+                    height="55px"
+                    src="../assets/NoUserProfileImage.png"
+                  />
+                ) : (
+                  <img
+                    className="navbar-profile-img"
+                    style={{ cursor: "pointer" }}
+                    height="45px"
+                    width="50px"
+                    src={"../.." + this.props.currentUser.fileURL}
+                  ></img>
+                )}
               </button>
               <div className="dropdown-content">
-                <a>Profile</a>
-                <a>Posts</a>
+                <Link to="/editProfile">Profile</Link>
+                <Link to="/userPosts">Posts</Link>
+                <Link to="/purchaseHistory">Purchases</Link>
                 <a onClick={this.userLogout}>Logout</a>
               </div>
             </div>
@@ -55,7 +71,7 @@ class UnconnectedNavBar extends Component {
   }
 }
 let mapStateToProps = state => {
-  return { lgin: state.loggedIn };
+  return { lgin: state.loggedIn, currentUser: state.user };
 };
 let NavBar = connect(mapStateToProps)(UnconnectedNavBar);
 

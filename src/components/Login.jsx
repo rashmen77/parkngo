@@ -19,6 +19,11 @@ class UnconnectedLogin extends Component {
   };
   submitHandler = async evt => {
     evt.preventDefault();
+
+    if (this.state.usernameInput === "" || this.state.passwordInput === "") {
+      alert("Username / password missing");
+      return;
+    }
     console.log("username", this.state.username);
     console.log("password", this.state.passwordInput);
     let name = this.state.usernameInput;
@@ -31,7 +36,8 @@ class UnconnectedLogin extends Component {
     body = JSON.parse(body);
     if (body.success) {
       this.props.dispatch({
-        type: "login-success"
+        type: "login-success",
+        value: body.data
       });
     } else {
       this.props.dispatch({
@@ -62,7 +68,7 @@ class UnconnectedLogin extends Component {
               </div>
               <div className="textBox">
                 <div>Password </div>
-                <input type="text" onChange={this.passwordChange} />
+                <input type="password" onChange={this.passwordChange} />
               </div>
               <Link className="login-forgotPwd" to="/forgotPwd">
                 I've forgotten my password

@@ -1,0 +1,64 @@
+.checkOut-container {
+  grid-column: 2 / span 6;
+  display: block;
+  margin-top: 5%;
+  background-color: var(--formColor);
+  font-family: "Lato", sans-serif;
+  color: black;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.checkOut-Mapbox {
+  margin: 50px 10px 20px 20px;
+  height: 100%;
+}
+
+.checkOut-total {
+  margin: 50px 10px 20px 20px;
+}
+
+.checkOut-amtContainer {
+  display: block;
+  margin: auto;
+  width: 50%;
+}
+
+.checkOut-row {
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
+  margin-bottom: 20px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 5px;
+}
+
+.checkOut-title {
+  margin-bottom: 50px;
+}
+
+.checkOut-centerContainer {
+  margin: auto;
+  width: 50%;
+}
+
+.checkOut-btn {
+  width: 50%;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.checkOut-submit-btn {
+  border: none;
+  font-size: 20px;
+  background-color: var(--button);
+  width: 300px;
+  padding: 8px 25px;
+  transition: var(--tansition);
+}
+
+.checkOut-QRcode {
+  margin-top: 20px;
+  width: 50%;
+  margin: auto;
+}

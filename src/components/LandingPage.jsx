@@ -1,37 +1,36 @@
-import React, { Component } from "react";
-import { FaMapMarkerAlt, FaAngleDown } from "react-icons/fa";
-import ArrivalDateTime from "./ArrivalDateTime.jsx";
+import React, { Component, useState } from "react";
+import { FaParking, FaMapMarkerAlt, FaAngleDown } from "react-icons/fa";
+
 import { Link } from "react-router-dom";
-import LeavingDateTime from "./LeavingDateTime.jsx";
+
 import { connect } from "react-redux";
-import ReactMapGL from "react-map-gl";
-import Geocode from "react-geocode";
+import ReactMapGL, { Marker, Popup } from "react-map-gl";
+
+import SelectDateTime from "./SelectDateTime.jsx";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 import "../css/landingPage.css";
-// Geocode.setApiKey("AIzaSyDDwEsQTNemIFXsrvLRM4B5CqKOtCY8FFs");
-// Geocode.setLanguage("en");
-// Geocode.setRegion("es");
-// Geocode.enableDebug();
-// Geocode.fromAddress("Eiffel Tower").then(
-//   response => {
-//     const { lat, lng } = response.results[0].geometry.location;
-//     console.log(lat, lng);
-//   },
-//   error => {
-//     console.error(error);
-//   }
-// );
 
 class UnconnectedLandingPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      hourlyDaily: true,
+      monthly: false,
+      hourlyDailyStyle: {
+        paddingBottom: "5px",
+        borderBottom: "2px solid var(--fontlight)",
+        borderRadius: 0
+      },
+      monthlyStyle: {
+        paddingBottom: "5px"
+      },
+      parkingPost: null,
       posts: [],
-      arrivalBtn: false,
-      leavingBtn: false,
       searchResultLayer: [],
       viewport: {
-        width: 800,
+        width: 700,
         height: 500,
         latitude: 45.508888,
         longitude: -73.561668,
@@ -91,7 +90,49 @@ class UnconnectedLandingPage extends Component {
   handelSearch = () => {
     this.props.dispatch({
       type: "target-coordinates",
-      value: this.props.targetAddress.geometry.coordinates
+      value: this.props.targetAddress.geometry.coordinates,
+      monthly: this.state.monthly
+    });
+  };
+
+  handelSearchWithNoData = () => {
+    this.props.dispatch({
+      type: "default-search",
+      monthly: this.state.monthly
+    });
+  };
+
+  setSelectedParking = parking => {
+    this.setState({
+      parkingPost: parking
+    });
+  };
+
+  getBrowserLocation = () => {};
+
+  setHourlyDaily = () => {
+    this.setState({
+      monthly: false,
+      hourlyDaily: true,
+      hourlyDailyStyle: {
+        paddingBottom: "5px",
+        borderBottom: "2px solid var(--fontlight)",
+        borderRadius: 0
+      },
+      monthlyStyle: { paddingBottom: "5px" }
+    });
+  };
+
+  setMonthly = () => {
+    this.setState({
+      monthly: true,
+      hourlyDaily: false,
+      monthlyStyle: {
+        paddingBottom: "5px",
+        borderBottom: "2px solid var(--fontlight)",
+        borderRadius: 0
+      },
+      hourlyDailyStyle: { paddingBottom: "5px" }
     });
   };
 
@@ -101,30 +142,46 @@ class UnconnectedLandingPage extends Component {
         <div className="searchParking">
           <div className="searchTitle">
             <div className="hourAndDaily">
-              <h2>HOURLY/DAILY</h2>
+              <button
+                style={this.state.hourlyDailyStyle}
+                onClick={this.setHourlyDaily}
+              >
+                <h1>HOURLY/DAILY</h1>
+              </button>
             </div>
             <div className="monthly">
-              <h2>MONTLY</h2>
+              <button style={this.state.monthlyStyle} onClick={this.setMonthly}>
+                <h1>MONTHLY</h1>
+              </button>
             </div>
           </div>
           <div className="searchLocation">
             <div className="locationContainer">
               <div className="locationLabel">PARKING AT</div>
-              <input
-                id="autocomplete"
-                className="inputLocation"
-                type="text"
-                onChange={this.locationSearch}
-                // value={
-                //   this.props.targetAddress === undefined
-                //     ? ""
-                //     : this.props.targetAddress.place_name
-                // }
-                placeholder="Where do you want to park?"
-              ></input>
-              <FaMapMarkerAlt className="mapIcon" />
+              {this.props.targetAddress === undefined ? (
+                <input
+                  className="inputLocation"
+                  type="text"
+                  onChange={this.locationSearch}
+                  placeholder="Where do you want to park?"
+                ></input>
+              ) : (
+                <input
+                  className="inputLocation"
+                  type="text"
+                  value={this.props.targetAddress.place_name}
+                  onChange={this.locationSearch}
+                  placeholder="Where do you want to park?"
+                ></input>
+              )}
+
+              <FaMapMarkerAlt
+                onClick={this.getBrowserLocation}
+                className="mapIcon"
+              />
+
               {this.state.searchResultLayer.map(result => {
-                return (
+                return this.props.targetAddress === undefined ? (
                   <div>
                     <button
                       onClick={() => this.SearchToCoordinate(result)}
@@ -133,68 +190,89 @@ class UnconnectedLandingPage extends Component {
                       {result.place_name.substring(0, 30)}
                     </button>
                   </div>
+                ) : (
+                  ""
                 );
               })}
             </div>
           </div>
-          <div className="dateTimeBox">
-            <div className="arriving">
-              <button className="arrivalBtn" onClick={this.arrival}>
-                <div>
-                  {this.props.arrivalDate.toDateString()}
-                  <FaAngleDown className="downIcon" />
-                </div>
-                <div>{this.props.arrivalTime}</div>
-              </button>
-            </div>
-            <div className="leaving">
-              <button className="leavingBtn" onClick={this.leaving}>
-                <div>
-                  {this.props.leavingDate.toDateString()}
-                  <FaAngleDown className="downIcon" />
-                </div>
-                <div>{this.props.leavingTime}</div>
-              </button>
-            </div>
-          </div>
+          {/* <div className="dateTimeBox">
+            <SelectDateTime></SelectDateTime>
+          </div> */}
           <div className="submitSearch">
             <Link to="/searchResults">
-              <button
-                onClick={() => {
-                  this.handelSearch();
-                }}
-                className="submitBtn"
-              >
-                Search for Parking
-              </button>
+              {this.props.targetAddress === undefined ? (
+                <button
+                  onClick={() => {
+                    this.handelSearchWithNoData();
+                  }}
+                  className="submitBtn"
+                >
+                  Search for Parking
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    this.handelSearch();
+                  }}
+                  className="submitBtn"
+                >
+                  Search for Parking
+                </button>
+              )}
             </Link>
           </div>
-          {this.state.arrivalBtn ? (
-            <>
-              <div className="locationLabel">Arriving</div>
-              <ArrivalDateTime></ArrivalDateTime>
-            </>
-          ) : (
-            <></>
-          )}
-          {this.state.leavingBtn ? (
-            <>
-              <div className="locationLabel">Leaving</div>{" "}
-              <LeavingDateTime></LeavingDateTime>{" "}
-            </>
-          ) : (
-            <></>
-          )}
         </div>
         <div className="map_box">
           <ReactMapGL
+            onClick={() => {
+              this.setSelectedParking(null);
+            }}
             className="map_box_map"
             mapboxApiAccessToken={this.MAPBOX_TOKEN}
             mapStyle="mapbox://styles/rashsiva77/ck3tg4jtv12ss1cs4txn1vcpp"
             {...this.state.viewport}
             onViewportChange={viewport => this.setState({ viewport })}
           >
-            {this.state.posts.map(parkingSpot => {})}
+            {this.state.posts.map(parkingSpot => {
+              return (
+                <Marker
+                  key={parkingSpot.addressID}
+                  latitude={parseFloat(parkingSpot.lat)}
+                  longitude={parseFloat(parkingSpot.lng)}
+                >
+                  <button
+                    className="landingPage-marker-btn"
+                    onClick={e => {
+                      e.preventDefault();
+                      this.setSelectedParking(parkingSpot);
+                    }}
+                  >
+                    <FaParking className="landingPage-marker-Icon"></FaParking>
+                  </button>
+                </Marker>
+              );
+            })}
+            {this.state.parkingPost ? (
+              <Popup
+                className="map-popup"
+                latitude={parseFloat(this.state.parkingPost.lat)}
+                longitude={parseFloat(this.state.parkingPost.lng)}
+              >
+                <div className="map-popup-container">
+                  <p>{this.state.parkingPost.address}</p>
+                  <h3>
+                    ${parseFloat(this.state.parkingPost.price).toFixed(2)}/hour
+                  </h3>
+                  <Link
+                    className="details-link"
+                    to={"/postDetails/" + this.state.parkingPost._id}
+                  >
+                    Details
+                  </Link>
+                </div>
+              </Popup>
+            ) : null}
           </ReactMapGL>
         </div>
       </div>
@@ -203,7 +281,7 @@ class UnconnectedLandingPage extends Component {
 }
 let mapStateToProps = state => {
   return {
-    arrivalDate: state.arrivalDate,
+    startDateTime: state.startDateTime,
     arrivalTime: state.arrivalTime,
     leavingDate: state.leavingDate,
     leavingTime: state.leavingTime,
