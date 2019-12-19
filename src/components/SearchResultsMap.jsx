@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import DeckGL, { GeoJsonLayer } from "deck.gl";
 import { FaParking, FaMapMarkerAlt } from "react-icons/fa";
+
+let authData = require("../../AuthData.js");
+
+let MAPBOX_TOKEN = authData.MAPBOX_TOKEN;
 
 class UnconnectedSearchResultsMap extends Component {
   constructor(props) {
@@ -20,6 +23,7 @@ class UnconnectedSearchResultsMap extends Component {
       }
     };
   }
+
   componentDidMount = async () => {
     let query = "";
 
@@ -31,7 +35,6 @@ class UnconnectedSearchResultsMap extends Component {
     let responseBody = await response.text();
     let body = JSON.parse(responseBody);
     if (body.success) {
-      console.log("all posts retrieved ", body);
       this.setState({
         posts: body.data
       });
@@ -39,13 +42,16 @@ class UnconnectedSearchResultsMap extends Component {
       console.log("all posts retrieved failure ", body);
     }
   };
+
   MAPBOX_TOKEN =
     "pk.eyJ1IjoicmFzaHNpdmE3NyIsImEiOiJjazN0MjR3MzcwZGUxM211aTBjanFiM3Q0In0.WnNe0New65UY1pzvaC-Njg";
+
   setSelectedParking = parking => {
     this.setState({
       parkingPost: parking
     });
   };
+
   render() {
     return (
       <div className="Map_box">
@@ -53,9 +59,7 @@ class UnconnectedSearchResultsMap extends Component {
           onClick={() => {
             this.setSelectedParking(null);
           }}
-          mapboxApiAccessToken={
-            "pk.eyJ1IjoicmFzaHNpdmE3NyIsImEiOiJjazN0MjR3MzcwZGUxM211aTBjanFiM3Q0In0.WnNe0New65UY1pzvaC-Njg"
-          }
+          mapboxApiAccessToken={MAPBOX_TOKEN}
           mapStyle="mapbox://styles/rashsiva77/ck3tg4jtv12ss1cs4txn1vcpp"
           {...this.state.viewport}
           onViewportChange={viewport => this.setState({ viewport })}
@@ -103,10 +107,19 @@ class UnconnectedSearchResultsMap extends Component {
               longitude={parseFloat(this.state.parkingPost.lng)}
             >
               <div className="map-popup-container">
-                <p>{this.state.parkingPost.address}</p>
+                <p>{this.state.parkingPost.address.substring(0, 30)}</p>
                 <h3>
-                  ${parseFloat(this.state.parkingPost.price).toFixed(2)}/hour
+                  Daily rate: $
+                  {parseFloat(this.state.parkingPost.dailyPrice).toFixed(2)}
                 </h3>
+                {this.state.parkingPost.monthly === "true" ? (
+                  <h3>
+                    {"Monthly rate: $" +
+                      parseFloat(this.state.parkingPost.dailyPrice).toFixed(2)}
+                  </h3>
+                ) : (
+                  ""
+                )}
                 <Link
                   className="details-link"
                   to={"/postDetails/" + this.state.parkingPost._id}

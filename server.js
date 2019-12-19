@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 let express = require("express");
 let app = express();
 let reloadMagic = require("./reload-magic.js");
@@ -8,6 +10,8 @@ let ObjectID = require("mongodb").ObjectID;
 let cookieParser = require("cookie-parser");
 app.use("/uploads", express.static("uploads"));
 
+let authData = require("./AuthData");
+
 app.use(cookieParser());
 
 let drivewayImages = multer({
@@ -17,18 +21,8 @@ let profileImageUpload = multer({
   dest: __dirname + "/uploads/images/profileImages/"
 });
 
-let url =
-  "mongodb+srv://bob:bobsue@cluster0-oit7u.mongodb.net/test?retryWrites=true&w=majority";
-// MongoClient.connect(
-//   url,
-//   { useUnifiedTopology: true, useNewUrlParser: true },
-//   (err, db) => {
-//     dbo = db.db("driveways");
-//   }
-// );
-
 MongoClient.connect(
-  url,
+  authData.MongoDB_URL,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -37,12 +31,13 @@ MongoClient.connect(
     if (err) {
       console.log("MongoClient connect error - ", err);
     }
-    let dbo = db.db("driveways");
+    let dbo = db.db("parkngo");
 
     start_server(dbo);
   }
 );
 
+//Used to generate SID
 let generateId = () => {
   return "" + Math.floor(Math.random() * 100000000);
 };
@@ -55,6 +50,9 @@ let start_server = dbo => {
 
   // endpoints
 
+  /**
+   * Erases cookie on broswer side, breaking the link.
+   */
   app.get("/logout", upload.none(), (req, res) => {
     let _sid = req.cookies.sid;
 
@@ -78,10 +76,13 @@ let start_server = dbo => {
     });
   });
 
+  /**
+   * checking if the browser cookie is associated with a user, if yes user is loaded
+   */
   app.get("/checkLogined", upload.none(), (req, res) => {
     let _sid = req.cookies.sid;
     dbo.collection("users").findOne({ sid: _sid }, (err, user) => {
-      console.log("checkLogined who am i ", user);
+      console.log("checkLogine", user);
       if (err) {
         res.send(JSON.stringify({ success: false }));
         return;
@@ -98,9 +99,13 @@ let start_server = dbo => {
     });
   });
 
+  /**
+   * Once user logs in, new SID is generate and stored in USER's Document
+   */
   app.post("/login", upload.none(), (req, res) => {
     let name = req.body.username;
     let pwd = req.body.password;
+
     dbo.collection("users").findOne({ username: name }, (err, user) => {
       console.log("login user", user);
       if (err) {
@@ -109,6 +114,7 @@ let start_server = dbo => {
       }
       if (user === null) {
         res.send(JSON.stringify({ success: false }));
+        return;
       }
       if (user.password === pwd) {
         let sessionId = generateId();
@@ -130,12 +136,19 @@ let start_server = dbo => {
       res.send(JSON.stringify({ success: false }));
     });
   });
+
+  /**
+   * checks if user alread exists > creates new user Document and stores SID. Sends back cookie with SID
+   * link is created between SID in user Document and broswer cookie
+   */
   app.post("/signup", upload.none(), (req, res) => {
     let _firstName = req.body.firstName;
     let _lastName = req.body.lastName;
     let _name = req.body.username;
     let _pwd = req.body.password;
-    //TODO: validation
+
+    //TODO: validation front end
+
     dbo.collection("users").findOne({ username: _name }, (err, user) => {
       if (err) {
         res.send(JSON.stringify({ success: false }));
@@ -167,6 +180,9 @@ let start_server = dbo => {
     });
   });
 
+  /**
+   * Post parking lot
+   */
   app.post("/postProperty", drivewayImages.single("file"), (req, res) => {
     let _file = req.file;
     let _filePath = "/uploads/images/drivewayImages/image_placeHolder.png";
@@ -224,6 +240,9 @@ let start_server = dbo => {
     });
   });
 
+  /**
+   * Get all posts
+   */
   app.get("/allPosts", upload.none(), (req, res) => {
     let _monthly = req.query.monthly;
     let _query = {};
@@ -254,6 +273,9 @@ let start_server = dbo => {
       });
   });
 
+  /**
+   * single post by postID
+   */
   app.get("/getPost", upload.none(), (req, res) => {
     let _postID = req.query.id;
 
@@ -288,11 +310,14 @@ let start_server = dbo => {
     });
   });
 
+  /**
+   * all posts by the user
+   */
   app.get("/getUserPosts", upload.none(), (req, res) => {
     let _sid = req.cookies.sid;
 
     dbo.collection("users").findOne({ sid: _sid }, (err, user) => {
-      console.log("get user posrt", user);
+      console.log("get user post", user);
       if (err) {
         res.send(
           JSON.stringify({
@@ -300,6 +325,7 @@ let start_server = dbo => {
             message: "Error"
           })
         );
+        return;
       }
 
       if (user === undefined) {
@@ -309,6 +335,7 @@ let start_server = dbo => {
             message: "User not found"
           })
         );
+        return;
       }
 
       if (user !== undefined) {
@@ -338,6 +365,9 @@ let start_server = dbo => {
     });
   });
 
+  /**
+   * delete post
+   */
   app.get("/deletePost", upload.none(), (req, res) => {
     let _postID = req.query.id;
     let _sid = req.cookies.sid;
@@ -346,7 +376,7 @@ let start_server = dbo => {
       dbo.collection("posts").deleteOne({ _id: ObjectID(_postID) });
 
       dbo.collection("users").findOne({ sid: _sid }, (err, user) => {
-        console.log("get user posrt", user);
+        console.log("get delete user post", user);
         if (err) {
           return res.send(
             JSON.stringify({
@@ -398,6 +428,9 @@ let start_server = dbo => {
     }
   });
 
+  /**
+   * edit post
+   */
   app.post("/editPost", drivewayImages.single("file"), (req, res) => {
     let _file = req.file;
     let _filePath = "/uploads/images/drivewayImages/image_placeHolder.png";
@@ -461,6 +494,9 @@ let start_server = dbo => {
     );
   });
 
+  /**
+   *
+   */
   app.post("/editProfile", profileImageUpload.single("file"), (req, res) => {
     let _userID = req.query.userID;
 
@@ -476,10 +512,8 @@ let start_server = dbo => {
     let _lastName = req.body.lastName;
     let _username = req.body.username;
     let _pwd = req.body.password;
-    //TODO: validation
 
     dbo.collection("users").findOne({ username: _username }, (err, user) => {
-      console.log("test", user, _username, user.username === _username);
       if (err) {
         res.send(JSON.stringify({ success: false, message: "server err" }));
         return;
@@ -515,6 +549,9 @@ let start_server = dbo => {
     });
   });
 
+  /**
+   * When puchases is completed the qty is updated and new Puchase document is created
+   */
   app.post("/updateQtyAndToPurchases", upload.none(), (req, res) => {
     let _postID = req.query.postID;
     let _ownerID = req.body.ownerID;
@@ -565,6 +602,9 @@ let start_server = dbo => {
     );
   });
 
+  /**
+   * all purchases by the user
+   */
   app.get("/getPurchases", upload.none(), (req, res) => {
     let _sid = req.cookies.sid;
 

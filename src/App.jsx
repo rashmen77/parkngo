@@ -21,7 +21,7 @@ class UnconnectedApp extends Component {
     let response = await fetch("/checkLogined");
     let reponseBody = await response.text();
     let body = JSON.parse(reponseBody);
-    console.log("who am i ", body);
+    console.log("Current user loggedIn", body);
 
     if (body.success) {
       this.props.dispatch({

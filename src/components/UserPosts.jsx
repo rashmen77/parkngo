@@ -7,6 +7,8 @@ import ParkingCard from "./ParkingCard.jsx";
 
 import "../css/userPosts.css";
 
+//TODO:loading is being dispatched, must be set in state
+
 class UnconnectedUserPosts extends Component {
   constructor() {
     super();
@@ -34,7 +36,6 @@ class UnconnectedUserPosts extends Component {
     let response = await fetch("/getUserPosts");
     let responseBody = await response.text();
     let body = JSON.parse(responseBody);
-    console.log("post details", body);
     if (body.success) {
       console.log("getAllPosts data:", body.data);
 

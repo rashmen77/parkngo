@@ -1,16 +1,17 @@
-import React, { Component, useState } from "react";
-import { FaParking, FaMapMarkerAlt, FaAngleDown } from "react-icons/fa";
-
+import React, { Component } from "react";
+import { FaParking, FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
 import { connect } from "react-redux";
+//MapBox
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-
-import SelectDateTime from "./SelectDateTime.jsx";
 
 import "react-datepicker/dist/react-datepicker.css";
 
 import "../css/landingPage.css";
+
+let authData = require("../../AuthData.js");
+
+let MAPBOX_TOKEN = authData.MAPBOX_TOKEN;
 
 class UnconnectedLandingPage extends Component {
   constructor(props) {
@@ -39,12 +40,15 @@ class UnconnectedLandingPage extends Component {
     };
   }
 
+  /**
+   * fetching all Parkinglot Spots to be passed to Marker/Popup components of
+   * React-map-gl
+   */
   componentDidMount = async () => {
     let response = await fetch("/allPosts");
     let responseBody = await response.text();
     let body = JSON.parse(responseBody);
     if (body.success) {
-      console.log("all posts retrieved ", body);
       this.setState({
         posts: body.data
       });
@@ -52,9 +56,6 @@ class UnconnectedLandingPage extends Component {
       console.log("all posts retrieved failure ", body);
     }
   };
-
-  MAPBOX_TOKEN =
-    "pk.eyJ1IjoicmFzaHNpdmE3NyIsImEiOiJjazN0MjR3MzcwZGUxM211aTBjanFiM3Q0In0.WnNe0New65UY1pzvaC-Njg";
 
   arrival = () => {
     this.setState({ arrivalBtn: !this.state.arrivalBtn });
@@ -69,7 +70,7 @@ class UnconnectedLandingPage extends Component {
       "https://api.mapbox.com/geocoding/v5/mapbox.places/{" +
         evt.target.value +
         "}.json?access_token=" +
-        this.MAPBOX_TOKEN +
+        MAPBOX_TOKEN +
         "&cachebuster=1575661747524&autocomplete=true"
     );
     let responseBody = await response.json();
@@ -108,8 +109,12 @@ class UnconnectedLandingPage extends Component {
     });
   };
 
+  //TODO: implement broswer location onclick of FaMapMarkerAlt component
   getBrowserLocation = () => {};
 
+  /**
+   * toggle button HOURLY/DAILY MONTHLY
+   */
   setHourlyDaily = () => {
     this.setState({
       monthly: false,
@@ -123,6 +128,9 @@ class UnconnectedLandingPage extends Component {
     });
   };
 
+  /**
+   * toggle button HOURLY/DAILY MONTHLY
+   */
   setMonthly = () => {
     this.setState({
       monthly: true,
@@ -196,9 +204,6 @@ class UnconnectedLandingPage extends Component {
               })}
             </div>
           </div>
-          {/* <div className="dateTimeBox">
-            <SelectDateTime></SelectDateTime>
-          </div> */}
           <div className="submitSearch">
             <Link to="/searchResults">
               {this.props.targetAddress === undefined ? (
@@ -229,7 +234,7 @@ class UnconnectedLandingPage extends Component {
               this.setSelectedParking(null);
             }}
             className="map_box_map"
-            mapboxApiAccessToken={this.MAPBOX_TOKEN}
+            mapboxApiAccessToken={MAPBOX_TOKEN}
             mapStyle="mapbox://styles/rashsiva77/ck3tg4jtv12ss1cs4txn1vcpp"
             {...this.state.viewport}
             onViewportChange={viewport => this.setState({ viewport })}
@@ -260,10 +265,21 @@ class UnconnectedLandingPage extends Component {
                 longitude={parseFloat(this.state.parkingPost.lng)}
               >
                 <div className="map-popup-container">
-                  <p>{this.state.parkingPost.address}</p>
+                  <p>{this.state.parkingPost.address.substring(0, 30)}</p>
                   <h3>
-                    ${parseFloat(this.state.parkingPost.price).toFixed(2)}/hour
+                    Daily rate: $
+                    {parseFloat(this.state.parkingPost.dailyPrice).toFixed(2)}
                   </h3>
+                  {this.state.parkingPost.monthly === "true" ? (
+                    <h3>
+                      {"Monthly rate: $" +
+                        parseFloat(this.state.parkingPost.dailyPrice).toFixed(
+                          2
+                        )}
+                    </h3>
+                  ) : (
+                    ""
+                  )}
                   <Link
                     className="details-link"
                     to={"/postDetails/" + this.state.parkingPost._id}
@@ -281,10 +297,6 @@ class UnconnectedLandingPage extends Component {
 }
 let mapStateToProps = state => {
   return {
-    startDateTime: state.startDateTime,
-    arrivalTime: state.arrivalTime,
-    leavingDate: state.leavingDate,
-    leavingTime: state.leavingTime,
     targetAddress: state.searchAddData
   };
 };

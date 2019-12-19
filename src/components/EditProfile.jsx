@@ -1,34 +1,52 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
-import { FaFileImage } from "react-icons/fa";
+import { Redirect } from "react-router-dom";
+
 import "../css/editProfile.css";
 
 class UnconnectedEditProfile extends Component {
   constructor() {
     super();
     this.state = {
+      currentUser: undefined,
       firstName: "",
       lastName: "",
       usernameInput: "",
       passwordInput: "",
       file: undefined,
-      preview: ""
+      preview: "",
+      loading: true
     };
   }
+
+  /**
+   * Setting data from store to current state on compononentDidMount
+   */
   componentDidMount = () => {
-    console.log("edit profile ", this.props.currentUser);
+    this.setCurrentUser();
   };
 
+  /**
+   * Set current user's data to state
+   */
+  setCurrentUser = () => {
+    this.setState({
+      currentUser: this.props.currentUser,
+      loading: false
+    });
+  };
+
+  /**
+   * Protected route
+   */
   renderRedirect = () => {
-    if (!this.props.lgin || this.props.currentUser === undefined) {
+    if (!this.props.lgin) {
       return <Redirect to="/" />;
     }
   };
 
   handleFile = event => {
     event.preventDefault();
-    console.log("upload media", event.target.files);
     this.setState({
       preview: URL.createObjectURL(event.target.files[0]),
       file: event.target.files[0]
@@ -48,15 +66,13 @@ class UnconnectedEditProfile extends Component {
     this.setState({ passwordInput: evt.target.value });
   };
 
+  /**
+   * Submit updated Profile, and keep data that has not been changed
+   */
   submitHandler = async evt => {
     evt.preventDefault();
 
-    // if (this.state.file === undefined) {
-    //   alert("no image selected");
-    //   return;
-    // }
-
-    let userID = this.props.currentUser._id;
+    let userID = this.state.currentUser._id;
 
     let firstName = "";
     let lastName = "";
@@ -65,26 +81,30 @@ class UnconnectedEditProfile extends Component {
     let file = undefined;
 
     this.state.firstName === ""
-      ? (firstName = this.props.currentUser.firstName)
+      ? (firstName = this.state.currentUser.firstName)
       : (firstName = this.state.firstName);
 
     this.state.lastName === ""
-      ? (lastName = this.props.currentUser.lastName)
+      ? (lastName = this.state.currentUser.lastName)
       : (lastName = this.state.lastName);
 
     this.state.usernameInput === ""
-      ? (usernameInput = this.props.currentUser.username)
+      ? (usernameInput = this.state.currentUser.username)
       : (usernameInput = this.state.usernameInput);
 
     this.state.passwordInput === ""
-      ? (passwordInput = this.props.currentUser.password)
+      ? (passwordInput = this.state.currentUser.password)
       : (passwordInput = this.state.passwordInput);
 
     file = this.state.file;
 
-    this.state.file === undefined
-      ? (file = JSON.parse(this.props.currentUser.file))
-      : (file = this.state.file);
+    //TODO:Convert an image to File Data
+    //
+    // console.log("props file:", JSON.parse(this.state.currentUser.file));
+    // console.log("state file:", this.state.file);
+    // this.state.file === undefined
+    //   ? (file = this.state.currentUser.file)
+    //   : (file = this.state.file);
 
     let data = new FormData();
 
@@ -112,7 +132,7 @@ class UnconnectedEditProfile extends Component {
     let response = await fetch("/checkLogined");
     let reponseBody = await response.text();
     let body = JSON.parse(reponseBody);
-    console.log("who am i ", body);
+    console.log("Edit profile", body);
 
     if (body.success) {
       this.props.dispatch({
@@ -130,88 +150,94 @@ class UnconnectedEditProfile extends Component {
     return (
       <>
         {this.renderRedirect()}
-
-        <div className="editProfile-container">
-          <div className="editProfile-box">
-            <div className="editProfile-title">
-              <h2>Edit Profile</h2>
+        {!this.state.loading ? (
+          <div className="editProfile-container">
+            <div className="editProfile-box">
+              <div className="editProfile-title">
+                <h2>Edit Profile</h2>
+              </div>
+              <div className="editProfile-mediaContainer">
+                <div className="editProfile-sectionLabel">Profile Picture</div>
+                <div className="editProfile-mediaUpload">
+                  <div className="editProfile-preview">
+                    {this.state.file ? (
+                      <img
+                        className="editProfile-loadPreview"
+                        src={this.state.preview}
+                      />
+                    ) : this.state.currentUser.file === "" ? (
+                      <img
+                        className="editProfile-defaultdPreview"
+                        src="../assets/NoUserProfileImage.png"
+                      />
+                    ) : (
+                      <img
+                        className="editProfile-defaultdPreview"
+                        src={"../.." + this.state.currentUser.fileURL}
+                      />
+                    )}
+                  </div>
+                  <input
+                    className="listProperty-button "
+                    type="file"
+                    onChange={this.handleFile}
+                  />
+                </div>
+              </div>
+              <form onSubmit={this.submitHandler}>
+                <div className="signup-field">
+                  <div className="signup-label">First name</div>
+                  <div className="signup-field-input">
+                    <input
+                      type="text"
+                      defaultValue={this.state.currentUser.firstName}
+                      onChange={this.firstNameChange}
+                    />
+                  </div>
+                </div>
+                <div className="signup-field">
+                  <div className="signup-label">Last name</div>
+                  <div className="signup-field-input">
+                    <input
+                      type="text"
+                      defaultValue={this.state.currentUser.lastName}
+                      onChange={this.lastNameChange}
+                    />
+                  </div>
+                </div>
+                <div className="signup-field">
+                  <div className="signup-label">Email address</div>
+                  <div className="signup-field-input">
+                    <input
+                      type="text"
+                      defaultValue={this.state.currentUser.username}
+                      onChange={this.usernameChange}
+                    />
+                  </div>
+                </div>
+                <div className="signup-field">
+                  <div className="signup-label">Password</div>
+                  <div className="signup-field-input">
+                    <input
+                      type="password"
+                      defaultValue={this.state.currentUser.password}
+                      onChange={this.passwordChange}
+                    />
+                  </div>
+                </div>
+                <button
+                  className="editProfile-btn"
+                  type="submit"
+                  value="signup"
+                >
+                  Update account
+                </button>
+              </form>
             </div>
-            <div className="editProfile-mediaContainer">
-              <div className="editProfile-sectionLabel">Profile Picture</div>
-              <div className="editProfile-mediaUpload">
-                <div className="editProfile-preview">
-                  {this.state.file ? (
-                    <img
-                      className="editProfile-loadPreview"
-                      src={this.state.preview}
-                    />
-                  ) : this.props.currentUser.file === "" ? (
-                    <img
-                      className="editProfile-defaultdPreview"
-                      src="../assets/NoUserProfileImage.png"
-                    />
-                  ) : (
-                    <img
-                      className="editProfile-defaultdPreview"
-                      src={"../.." + this.props.currentUser.fileURL}
-                    />
-                  )}
-                </div>
-                <input
-                  className="listProperty-button "
-                  type="file"
-                  onChange={this.handleFile}
-                />
-              </div>
-            </div>
-            <form onSubmit={this.submitHandler}>
-              <div className="signup-field">
-                <div className="signup-label">First name</div>
-                <div className="signup-field-input">
-                  {console.log("file list prop", this.state.firstName)}
-                  <input
-                    type="text"
-                    defaultValue={this.props.currentUser.firstName}
-                    onChange={this.firstNameChange}
-                  />
-                </div>
-              </div>
-              <div className="signup-field">
-                <div className="signup-label">Last name</div>
-                <div className="signup-field-input">
-                  <input
-                    type="text"
-                    defaultValue={this.props.currentUser.lastName}
-                    onChange={this.lastNameChange}
-                  />
-                </div>
-              </div>
-              <div className="signup-field">
-                <div className="signup-label">Email address</div>
-                <div className="signup-field-input">
-                  <input
-                    type="text"
-                    defaultValue={this.props.currentUser.username}
-                    onChange={this.usernameChange}
-                  />
-                </div>
-              </div>
-              <div className="signup-field">
-                <div className="signup-label">Password</div>
-                <div className="signup-field-input">
-                  <input
-                    type="password"
-                    defaultValue={this.props.currentUser.password}
-                    onChange={this.passwordChange}
-                  />
-                </div>
-              </div>
-              <button className="editProfile-btn" type="submit" value="signup">
-                Update account
-              </button>
-            </form>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
       </>
     );
   }

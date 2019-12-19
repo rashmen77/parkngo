@@ -14,7 +14,6 @@ export default class Footer extends Component {
       <div className="footer">
         <div className="footer-left">
           <FaCopyright className="footer-left-icon"></FaCopyright>
-
           <span>2019</span>
         </div>
         <div className="footer-middle">
@@ -23,14 +22,13 @@ export default class Footer extends Component {
           </Link>
         </div>
         <div className="footer-right">
-          <Link>
+          <Link to="/">
             <FaTwitter className="footer-right-icon-twiiter"></FaTwitter>
           </Link>
-          <Link>
-            {" "}
+          <Link to="/">
             <FaInstagram className="footer-right-icon-instagram"></FaInstagram>
           </Link>
-          <Link>
+          <Link to="/">
             <FaFacebook className="footer-right-icon-facebook"></FaFacebook>
           </Link>
         </div>

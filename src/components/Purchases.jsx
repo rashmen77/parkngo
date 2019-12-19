@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PurchasesCard from "./PurchasesCard.jsx";
 import LoadingOverlay from "react-loading-overlay";
+import { Redirect } from "react-router-dom";
 
 import "../css/purchases.css";
 
@@ -28,7 +29,6 @@ class UnconnectedPurchases extends Component {
     let response = await fetch("/getPurchases");
     let responseBody = await response.text();
     let body = JSON.parse(responseBody);
-    console.log("post details", body);
     if (body.success) {
       console.log("getAllpurchases data:", body.data);
 

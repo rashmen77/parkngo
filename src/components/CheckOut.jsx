@@ -9,6 +9,8 @@ import QRCode from "qrcode.react";
 
 import "../css/checkOut.css";
 
+let authData = require("../../AuthData.js");
+
 class UnconnectedCheckOut extends Component {
   constructor(props) {
     super(props);
@@ -39,8 +41,8 @@ class UnconnectedCheckOut extends Component {
     return "" + Math.floor(Math.random() * 100000000);
   };
 
-  MAPBOX_TOKEN =
-    "pk.eyJ1IjoicmFzaHNpdmE3NyIsImEiOiJjazN0MjR3MzcwZGUxM211aTBjanFiM3Q0In0.WnNe0New65UY1pzvaC-Njg";
+  // MAPBOX_TOKEN =
+  //   "pk.eyJ1IjoicmFzaHNpdmE3NyIsImEiOiJjazN0MjR3MzcwZGUxM211aTBjanFiM3Q0In0.WnNe0New65UY1pzvaC-Njg";
 
   checkLoggedin = () => {
     if (!this.props.lgin) {
@@ -138,7 +140,7 @@ class UnconnectedCheckOut extends Component {
             <div className="checkOut-Mapbox">
               <ReactMapGL
                 className="listProperty-map"
-                mapboxApiAccessToken={this.MAPBOX_TOKEN}
+                mapboxApiAccessToken={authData.MAPBOX_TOKEN}
                 mapStyle="mapbox://styles/rashsiva77/ck3tg4jtv12ss1cs4txn1vcpp"
                 {...this.state.viewport}
                 onViewportChange={viewport => this.setState({ viewport })}

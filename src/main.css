@@ -91,6 +91,7 @@ nav {
 
 .navbar-profile-img {
   border-radius: 50%;
+  margin-bottom: 8px;
 }
 
 .nav-login-signup button {

@@ -29,17 +29,22 @@ class UnconnectedRegister extends Component {
   };
   submitHandler = async evt => {
     evt.preventDefault();
+
     let name = this.state.usernameInput;
     let firstName = this.state.firstName;
     let lastName = this.state.lastName;
+
     let data = new FormData();
+
     data.append("firstName", firstName);
     data.append("lastName", lastName);
     data.append("username", name);
     data.append("password", this.state.passwordInput);
+
     let response = await fetch("/signup", { method: "POST", body: data });
     let body = await response.text();
     console.log("/login response", body);
+
     body = JSON.parse(body);
     if (body.success) {
       this.props.dispatch({

@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import ReactMapGL, { Marker } from "react-map-gl";
 import { FaMapMarkerAlt, FaFileImage, FaAngleDown } from "react-icons/fa";
 import DatePicker from "react-datepicker";
-import SelectDateTime from "./SelectDateTime.jsx";
-// import "../css/listProperty.css";
+
 import "../css/listProperty.css";
+
+let authData = require("../../AuthData.js");
+
+let MAPBOX_TOKEN = authData.MAPBOX_TOKEN;
 
 class UnconnectedListProperty extends Component {
   constructor(props) {
@@ -22,10 +25,6 @@ class UnconnectedListProperty extends Component {
       price: 0,
       postComplete: false,
       file: "",
-      startDay: "Mon",
-      startTime: "12:00",
-      endDay: "",
-      endTime: "",
       preview: "",
       searchResultLayer: [],
       marker: false,
@@ -39,15 +38,13 @@ class UnconnectedListProperty extends Component {
       }
     };
   }
-  MAPBOX_TOKEN =
-    "pk.eyJ1IjoicmFzaHNpdmE3NyIsImEiOiJjazN0MjR3MzcwZGUxM211aTBjanFiM3Q0In0.WnNe0New65UY1pzvaC-Njg";
 
   changeAddress = async evt => {
     let response = await fetch(
       "https://api.mapbox.com/geocoding/v5/mapbox.places/{" +
         evt.target.value +
         "}.json?access_token=" +
-        this.MAPBOX_TOKEN +
+        MAPBOX_TOKEN +
         "&cachebuster=1575661747524&autocomplete=true"
     );
     let responseBody = await response.json();
@@ -97,28 +94,6 @@ class UnconnectedListProperty extends Component {
     });
   };
 
-  onChangeStartDay = event => {
-    this.setState({
-      startDay: event.target.value
-    });
-  };
-  onChangeStartTime = event => {
-    this.setState({
-      startTime: event.target.value
-    });
-  };
-
-  onChangeEndDay = event => {
-    this.setState({
-      endDay: event.target.value
-    });
-  };
-  onChangeEndTime = event => {
-    this.setState({
-      endTime: event.target.value
-    });
-  };
-
   onChangeMonthlyPrice = event => {
     this.setState({
       monthlyPrice: event.target.value
@@ -143,15 +118,13 @@ class UnconnectedListProperty extends Component {
     });
   };
 
-  onChaneDescription = event => {
+  onChangeDescription = event => {
     this.setState({
       description: event.target.value
     });
   };
 
   setStartDateTime = date => {
-    console.log("available", this.state.availStartDateTime.toJSON());
-    console.log("available end", this.state.availEndDateTime);
     this.setState({
       availStartDateTime: date
     });
@@ -165,6 +138,7 @@ class UnconnectedListProperty extends Component {
 
   submitPost = async () => {
     event.preventDefault();
+
     let data = new FormData();
 
     data.append("file", this.state.file);
@@ -242,7 +216,7 @@ class UnconnectedListProperty extends Component {
             <div className="listProperty-mapbox">
               <ReactMapGL
                 className="listProperty-map"
-                mapboxApiAccessToken={this.MAPBOX_TOKEN}
+                mapboxApiAccessToken={MAPBOX_TOKEN}
                 mapStyle="mapbox://styles/rashsiva77/ck3tg4jtv12ss1cs4txn1vcpp"
                 {...this.state.viewport}
                 onViewportChange={viewport => this.setState({ viewport })}
@@ -265,7 +239,6 @@ class UnconnectedListProperty extends Component {
             <div className="listProperty-sectionLabel">Media</div>
             <div className="listProperty-mediaUpload">
               <div className="listProperty-preview">
-                {console.log("file list prop", this.state.file)}
                 {this.state.file ? (
                   <img
                     className="listProperty-loadPreview"
@@ -378,7 +351,7 @@ class UnconnectedListProperty extends Component {
               <h3>Description</h3>
               <textarea
                 placeholder="text here"
-                onChange={this.onChaneDescription}
+                onChange={this.onChangeDescription}
               ></textarea>
             </div>
           </div>

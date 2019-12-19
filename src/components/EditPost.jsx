@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import ReactMapGL, { Marker } from "react-map-gl";
 import { FaAngleDown } from "react-icons/fa";
 import { FaMapMarkerAlt, FaFileImage } from "react-icons/fa";
 
 import "../css/listProperty.css";
+
+let authData = require("../../AuthData.js");
+let MAPBOX_TOKEN = authData.MAPBOX_TOKEN;
 
 class UnconnectedEditPost extends Component {
   constructor(props) {
@@ -24,8 +27,6 @@ class UnconnectedEditPost extends Component {
       price: 0,
       postComplete: false,
       file: "",
-      startDay: "Mon",
-      startTime: "12:00",
       endDay: "",
       endTime: "",
       preview: "",
@@ -49,7 +50,7 @@ class UnconnectedEditPost extends Component {
       "https://api.mapbox.com/geocoding/v5/mapbox.places/{" +
         evt.target.value +
         "}.json?access_token=" +
-        this.MAPBOX_TOKEN +
+        MAPBOX_TOKEN +
         "&cachebuster=1575661747524&autocomplete=true"
     );
     let responseBody = await response.json();
@@ -60,8 +61,6 @@ class UnconnectedEditPost extends Component {
   };
 
   SearchToCoordinate = _result => {
-    console.log("handleParkingAddress on landingPage", _result);
-
     this.setState({
       result: _result,
       marker: true,
@@ -90,28 +89,6 @@ class UnconnectedEditPost extends Component {
     this.setState({
       preview: URL.createObjectURL(event.target.files[0]),
       file: event.target.files[0]
-    });
-  };
-
-  onChangeStartDay = event => {
-    this.setState({
-      startDay: event.target.value
-    });
-  };
-  onChangeStartTime = event => {
-    this.setState({
-      startTime: event.target.value
-    });
-  };
-
-  onChangeEndDay = event => {
-    this.setState({
-      endDay: event.target.value
-    });
-  };
-  onChangeEndTime = event => {
-    this.setState({
-      endTime: event.target.value
     });
   };
 
@@ -156,8 +133,6 @@ class UnconnectedEditPost extends Component {
   };
 
   setStartDateTime = date => {
-    console.log("available", this.state.availStartDateTime.toJSON());
-    console.log("available end", this.state.availEndDateTime);
     this.setState({
       availStartDateTime: date
     });
@@ -241,7 +216,7 @@ class UnconnectedEditPost extends Component {
             <div className="listProperty-mapbox">
               <ReactMapGL
                 className="listProperty-map"
-                mapboxApiAccessToken={this.MAPBOX_TOKEN}
+                mapboxApiAccessToken={MAPBOX_TOKEN}
                 mapStyle="mapbox://styles/rashsiva77/ck3tg4jtv12ss1cs4txn1vcpp"
                 {...this.state.viewport}
                 onViewportChange={viewport => this.setState({ viewport })}

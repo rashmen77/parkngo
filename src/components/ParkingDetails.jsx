@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import LoadingOverlay from "react-loading-overlay";
-import { FaMapMarkerAlt, FaAngleDown, FaWindowClose } from "react-icons/fa";
-import SelectDateTime from "./SelectDateTime.jsx";
 
 import "../css/parkingDetails.css";
 
@@ -29,7 +27,6 @@ class UnconnectedParkingDetails extends Component {
     let response = await fetch("/getPost?id=" + postID);
     let responseBody = await response.text();
     let body = JSON.parse(responseBody);
-    console.log("post details", body);
     if (body.success) {
       console.log("postDetails data:", body.data);
 
@@ -42,6 +39,9 @@ class UnconnectedParkingDetails extends Component {
     }
   };
 
+  /**
+   * get time in HH:MM
+   */
   getStart = () => {
     let _date = Date.parse(this.props.parkingLotDetail.availableStart);
 
@@ -51,6 +51,9 @@ class UnconnectedParkingDetails extends Component {
     return timeStr;
   };
 
+  /**
+   * get time in HH:MM
+   */
   getEnd = () => {
     let _date = Date.parse(this.props.parkingLotDetail.availableEnd);
 

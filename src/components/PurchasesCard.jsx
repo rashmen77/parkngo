@@ -4,6 +4,9 @@ import QRCode from "qrcode.react";
 import { Link, Redirect } from "react-router-dom";
 
 class UnconnectedPurchasesCard extends Component {
+  /**
+   * download QR code
+   */
   downloadQR = () => {
     const canvas = document.getElementById("checkOut-qrcode");
     const pngUrl = canvas

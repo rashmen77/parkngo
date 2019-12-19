@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { FaSatellite } from "react-icons/fa";
 
 class UnconnectedNavBar extends Component {
@@ -8,7 +8,6 @@ class UnconnectedNavBar extends Component {
     let response = await fetch("/logout");
     let reponseBody = await response.text();
     let body = JSON.parse(reponseBody);
-    console.log(body);
 
     this.props.dispatch({
       type: "login-fail"
@@ -16,6 +15,9 @@ class UnconnectedNavBar extends Component {
   };
 
   render() {
+    // if (!this.props.lgin) {
+    //   return <Redirect to="/" />;
+    // }
     return (
       <header>
         <nav>
@@ -39,7 +41,6 @@ class UnconnectedNavBar extends Component {
           ) : (
             <div className="dropdown">
               <button className="dropbtn">
-                {console.log("nav user ", this.props.currentUser)}
                 {this.props.currentUser.file === "" ? (
                   <img
                     className="navbar-profile-img"
