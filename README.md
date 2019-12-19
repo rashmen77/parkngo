@@ -1,6 +1,6 @@
 <h2>Park N Go</h2>
 
-Parkngo is Web Application(mvp) that allows one to browse through all the different parking lots in the city, and pay and reserve a spot. Once you pay, the app will generate you a QR code that you will present at arrival to the paid parking lot. Also, a user can list his/her property.
+Parkngo is Web Application that allows one to browse through all the different parking lots in the city, and pay and reserve a spot. Once you pay, the app will generate you a QR code that you will present at arrival to the paid parking lot. Also, a user can list his/her property.
 
 Front-end: React.js, Redux, JavaScript, CSS, ReactMapboxGL</br>
 Back-end: Node.js, Express, MongoDB
